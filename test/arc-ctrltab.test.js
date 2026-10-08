@@ -60,6 +60,12 @@ test('mirrors settings into the native switches', () => {
   assert.strictEqual(native.previewsPerRow, 1);
 });
 
+test('panel size setting becomes the CSS scale, clamped', () => {
+  assert.strictEqual(load({ 'zen-arc-ctrltab.size': 150 }).panel.style.vars['--zac-scale'], 1.5);
+  assert.strictEqual(load({ 'zen-arc-ctrltab.size': 9999 }).panel.style.vars['--zac-scale'], 3);
+  assert.strictEqual(load().panel.style.vars['--zac-scale'], 1);
+});
+
 test('hold mode: releasing Ctrl reaches the native pick', () => {
   const { native, calls } = load();
   native.handleEvent(ctrlUp);

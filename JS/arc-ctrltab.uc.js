@@ -32,6 +32,7 @@
     return e;
   };
   const layout = () => panel.getAttribute('zac-layout');
+  const scale = () => Math.min(3, Math.max(0.5, pref('size', 100) / 100));
 
   // Firefox's switcher has these as its only switches; the mod's settings drive them.
   const apply = () => {
@@ -42,6 +43,7 @@
     panel.setAttribute('zac-layout', ['grid', 'list', 'split'][pref('layout', 0)] ?? 'grid');
     panel.toggleAttribute('zac-no-showall', !pref('show-all-button', true));
     native.previewsPerRow = layout() === 'grid' ? pref('tiles-per-row', 5) : 1;
+    panel.style.setProperty('--zac-scale', scale());
     const accent = String(pref('accent', '')).trim();
     if (accent) panel.style.setProperty('--ctrltab-accent', accent);
     else panel.style.removeProperty('--ctrltab-accent');
@@ -131,12 +133,13 @@
     const w = screen.availWidth;
     const h = screen.availHeight;
     const rows = Math.ceil(this.tabPreviewCount / this.previewColumnCount);
+    const s = scale();
     const width = {
-      grid: Math.min(w * 0.96, this.canvasWidth * 1.25 * this.previewColumnCount),
-      list: Math.min(w * 0.9, 640),
-      split: Math.min(w * 0.9, 1180),
+      grid: Math.min(w * 0.96, this.canvasWidth * 1.25 * this.previewColumnCount * s),
+      list: Math.min(w * 0.96, 640 * s),
+      split: Math.min(w * 0.96, 1180 * s),
     }[layout()];
-    const guess = layout() === 'grid' ? this.canvasHeight * 1.3 * rows + 90 : h * 0.6;
+    const guess = layout() === 'grid' ? this.canvasHeight * 1.3 * rows * s + 90 : h * 0.6;
     panel.style.width = width + 'px';
     panel.style.setProperty('--zac-max-h', Math.floor(h * 0.78) + 'px');
     panel.openPopupAtScreen(screen.availLeft + (w - width) / 2, screen.availTop + (h - guess) / 2, false);

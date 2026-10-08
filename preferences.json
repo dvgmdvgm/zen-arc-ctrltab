@@ -62,6 +62,24 @@
   },
   {
     "type": "dropdown",
+    "property": "zen-arc-ctrltab.size",
+    "value": "number",
+    "label": "Panel size: scales the panel, previews, icons and text together",
+    "defaultValue": 100,
+    "options": [
+      { "label": "70%", "value": 70 },
+      { "label": "85%", "value": 85 },
+      { "label": "100%", "value": 100 },
+      { "label": "115%", "value": 115 },
+      { "label": "130%", "value": 130 },
+      { "label": "150%", "value": 150 },
+      { "label": "175%", "value": 175 },
+      { "label": "200%", "value": 200 },
+      { "label": "250%", "value": 250 }
+    ]
+  },
+  {
+    "type": "dropdown",
     "property": "zen-arc-ctrltab.tiles-per-row",
     "value": "number",
     "label": "Previews per row (grid layout; fewer means bigger)",
