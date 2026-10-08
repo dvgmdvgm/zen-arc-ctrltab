@@ -1,0 +1,8 @@
+[
+  {
+    "type": "checkbox",
+    "property": "zen-arc-ctrltab.enabled",
+    "label": "Ctrl+Tab shows a visual tab switcher (most recently used first)",
+    "defaultValue": true
+  }
+]

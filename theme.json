@@ -1,0 +1,30 @@
+{
+  "id": "zen-arc-ctrltab",
+  "name": "Arc Ctrl+Tab",
+  "description": "Arc-style Ctrl+Tab tab switcher: hold Ctrl and press Tab to see a row of tab previews in most-recently-used order, release Ctrl to jump to the highlighted tab. Turns on Zen's built-in switcher and restyles it with your theme's colors.",
+  "version": "1.0.0",
+  "author": "dvgmdvgm",
+  "homepage": "https://github.com/dvgmdvgm/zen-arc-ctrltab",
+  "readme": "https://raw.githubusercontent.com/dvgmdvgm/zen-arc-ctrltab/main/README.md",
+  "tags": [
+    "tabs",
+    "arc",
+    "JS"
+  ],
+  "fork": [
+    "zen"
+  ],
+  "preferences": "preferences.json",
+  "scripts": {
+    "JS/arc-ctrltab.uc.js": {
+      "name": "Arc Ctrl+Tab",
+      "description": "Switches on the recently-used Ctrl+Tab panel that ships with Zen.",
+      "include": [
+        "chrome://browser/content/browser.xhtml"
+      ]
+    }
+  },
+  "style": {
+    "chrome": "chrome.css"
+  }
+}

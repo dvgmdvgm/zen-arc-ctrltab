@@ -1,0 +1,84 @@
+/* Arc-style Ctrl+Tab panel. Restyles Firefox's #ctrlTab-panel (browser/skin/.../ctrlTab.css);
+   every color comes from the live theme, nothing is hard-coded. */
+
+#ctrlTab-panel {
+  --panel-background-color: var(--arrowpanel-background, Menu);
+  --panel-text-color: var(--arrowpanel-color, MenuText);
+  --panel-border-color: var(--arrowpanel-border-color, transparent);
+  --panel-border-radius: 22px;
+  --panel-padding: 12px;
+  --ctrltab-accent: var(--zen-primary-color, AccentColor);
+  font-weight: normal;
+}
+
+#ctrlTab-panel #ctrlTab-previews {
+  column-gap: 8px;
+  row-gap: 8px;
+}
+
+/* One tile: thumbnail on top, favicon + title underneath. */
+#ctrlTab-panel .ctrlTab-preview-inner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 8px;
+  border: none;
+  border-radius: 16px;
+  text-shadow: none;
+}
+
+#ctrlTab-panel .ctrlTab-canvas {
+  grid-column: 1 / -1;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: none;
+  outline: 1px solid var(--border-color-deemphasized, transparent);
+  outline-offset: -1px;
+}
+
+/* The thumbnail is sized in px by the browser for its own layout; fit it to the tile instead. */
+#ctrlTab-panel .ctrlTab-canvas > img,
+#ctrlTab-panel .ctrlTab-canvas > canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+
+#ctrlTab-panel .ctrlTab-favicon-container {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+#ctrlTab-panel .ctrlTab-favicon[src] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 4px;
+}
+
+#ctrlTab-panel .ctrlTab-label {
+  grid-column: 2;
+  grid-row: 2;
+  text-align: start;
+}
+
+/* The tile Ctrl+Tab is on. */
+#ctrlTab-panel .ctrlTab-preview:focus > .ctrlTab-preview-inner,
+#ctrlTab-panel #ctrlTab-showAll:focus {
+  background-color: color-mix(in srgb, var(--ctrltab-accent) 45%, transparent);
+  text-shadow: none;
+  border-color: transparent;
+}
+
+#ctrlTab-panel #ctrlTab-showAll {
+  margin-top: 8px;
+  padding: 6px 14px;
+  border-radius: 10px;
+  text-shadow: none;
+  background-color: color-mix(in srgb, currentColor 10%, transparent);
+}
