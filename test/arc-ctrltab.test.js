@@ -110,6 +110,21 @@ test('thumbnails are only fetched for tiles in the grid layout', async () => {
   assert.strictEqual(await list.win.tabPreviews.get({}), null);
 });
 
+test('holding Tab is slowed to the chosen rate; the first press and slow repeats pass', () => {
+  const { win, calls } = load({ 'zen-arc-ctrltab.repeat-speed': 10 }); // one step per 100 ms
+  const keydown = win.listeners.keydown[0];
+  const press = (timeStamp, repeat) => {
+    const e = { action: 'cycle', repeat, timeStamp, target: { closest: () => ({}) }, stopped: false, preventDefault() {}, stopPropagation() { this.stopped = true; } };
+    keydown(e);
+    return e.stopped;
+  };
+  assert.strictEqual(press(1000, false), false);
+  assert.strictEqual(press(1030, true), true); // too soon
+  assert.strictEqual(press(1060, true), true);
+  assert.strictEqual(press(1110, true), false); // 110 ms after the last step
+  assert.strictEqual(calls.length, 2);
+});
+
 test('every preview box gets the thumbnail shape', () => {
   assert.strictEqual(load().panel.style.vars['--zac-ratio'], 1.6);
 });

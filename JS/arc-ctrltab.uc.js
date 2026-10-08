@@ -86,6 +86,9 @@
     meta.append(icon, text);
     pane.toggleAttribute('zac-unloaded', tab.hasAttribute('pending'));
     pane.replaceChildren(shot, meta);
+    // Title and icon appear at once; the thumbnail waits until the highlight stops moving.
+    await new Promise((resolve) => setTimeout(resolve, 80));
+    if (mine !== shown) return;
     const img = await getThumb(tab).catch(() => null);
     if (img && mine === shown) shot.append(img);
   };
@@ -131,11 +134,20 @@
 
   // A popup with focus (the translate offer, a permission prompt) takes Tab for itself and marks the event
   // handled, so Firefox's own Ctrl+Tab listener skips it. Catch the shortcut first, on the way down.
+  // The same listener slows the key's auto-repeat, so holding Tab steps at a pace the eye can follow.
+  let lastStep = 0;
   window.addEventListener('keydown', (e) => {
     if (!prefs.getBoolPref('browser.ctrlTab.sortByRecentlyUsed', false)) return;
+    if (ShortcutUtils.getSystemActionForEvent(e) !== ShortcutUtils.CYCLE_TABS) return;
+    const rate = pref('repeat-speed', 8);
+    if (e.repeat && rate && e.timeStamp - lastStep < 1000 / rate) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    lastStep = e.timeStamp;
     const popup = e.target.closest?.('panel, menupopup, [popover]');
-    if (!popup || popup === panel) return;
-    if (ShortcutUtils.getSystemActionForEvent(e) === ShortcutUtils.CYCLE_TABS) native.onKeyDown(e);
+    if (popup && popup !== panel) native.onKeyDown(e);
   }, true);
 
   // Sized per layout, then centred once the real size is known.

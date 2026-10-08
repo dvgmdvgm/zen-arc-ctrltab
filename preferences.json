@@ -22,6 +22,20 @@
     ]
   },
   {
+    "type": "dropdown",
+    "property": "zen-arc-ctrltab.repeat-speed",
+    "value": "number",
+    "label": "Holding Tab moves the highlight at most",
+    "defaultValue": 8,
+    "options": [
+      { "label": "4 tabs per second", "value": 4 },
+      { "label": "6 tabs per second", "value": 6 },
+      { "label": "8 tabs per second", "value": 8 },
+      { "label": "12 tabs per second", "value": 12 },
+      { "label": "As fast as the keyboard repeats", "value": 0 }
+    ]
+  },
+  {
     "type": "checkbox",
     "property": "zen-arc-ctrltab.show-unloaded",
     "label": "Include unloaded tabs (shown muted)",

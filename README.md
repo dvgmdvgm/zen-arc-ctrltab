@@ -11,6 +11,7 @@ All of them live in the mod's settings (Zen settings → Sine Mods → Arc Ctrl+
 | Setting | Options |
 | --- | --- |
 | How the panel works | **Hold**: hold Ctrl, press Tab to move, release Ctrl to switch. **Press once**: Ctrl+Tab opens the panel and it stays open; move with Tab, Shift+Tab or the arrow keys, **Enter** or a click switches, **Esc** or a click outside closes it without switching. |
+| Key repeat speed | 4 to 12 tabs per second, or unlimited. Limits how fast the highlight moves while you hold Tab, so you can see where it is and let go in time. |
 | Panel layout | **Previews**: a grid of thumbnails. **List**: tabs top to bottom, no thumbnails. **List and preview**: tab list on the left, one large preview of the highlighted tab on the right. |
 | Panel size | 70% to 250%. Scales the panel, previews, icons and text together. (Sine has no slider control, so it is a list of steps.) |
 | Previews per row | 3–7 for the grid layout. Fewer means bigger previews. |
