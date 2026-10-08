@@ -39,13 +39,14 @@ function load(prefValues = {}) {
   };
   const calls = [];
   const native = {
-    previewsPerRow: 7, isOpen: true, previewColumnCount: 2,
+    previewsPerRow: 7, onKeyDown(e) { calls.push('onKeyDown'); }, isOpen: true, previewColumnCount: 2,
     previews: [], updatePreview() {},
     handleEvent(e) { calls.push(e.type); },
   };
-  const win = { tabPreviews: { get: () => Promise.resolve('thumb') }, tabPreviewPanelHelper: {}, addEventListener() {} };
+  const win = { tabPreviews: { aspectRatio: 0.625, get: () => Promise.resolve('thumb') }, tabPreviewPanelHelper: {}, listeners: {}, addEventListener(t, f) { (this.listeners[t] ||= []).push(f); } };
+  const ShortcutUtils = { CYCLE_TABS: 'cycle', getSystemActionForEvent: (e) => e.action };
   env = { document: doc };
-  new Function('window', 'document', 'Services', 'ctrlTab', 'screen', 'gBrowser', code)(win, doc, Services, native, {}, { warmupTab() {} });
+  new Function('window', 'document', 'Services', 'ctrlTab', 'screen', 'gBrowser', 'ShortcutUtils', code)(win, doc, Services, native, {}, { warmupTab() {} }, ShortcutUtils);
   return { store, panel, list, native, win, calls };
 }
 
@@ -107,4 +108,23 @@ test('thumbnails are only fetched for tiles in the grid layout', async () => {
   assert.strictEqual(await grid.win.tabPreviews.get({}), 'thumb');
   const list = load({ 'zen-arc-ctrltab.layout': 2 });
   assert.strictEqual(await list.win.tabPreviews.get({}), null);
+});
+
+test('every preview box gets the thumbnail shape', () => {
+  assert.strictEqual(load().panel.style.vars['--zac-ratio'], 1.6);
+});
+
+test('Ctrl+Tab typed inside another popup still reaches the switcher', () => {
+  const { win, panel, calls, store } = load();
+  const keydown = win.listeners.keydown[0];
+  const inPopup = (popup) => ({ action: 'cycle', target: { closest: () => popup } });
+  keydown(inPopup({}));
+  assert.deepStrictEqual(calls, ['onKeyDown']);
+  keydown(inPopup(panel)); // our own panel: Firefox handles it
+  keydown(inPopup(null)); // not in a popup: Firefox handles it
+  keydown({ action: 'other', target: { closest: () => ({}) } });
+  assert.deepStrictEqual(calls, ['onKeyDown']);
+  store['browser.ctrlTab.sortByRecentlyUsed'] = false;
+  keydown(inPopup({}));
+  assert.deepStrictEqual(calls, ['onKeyDown']);
 });

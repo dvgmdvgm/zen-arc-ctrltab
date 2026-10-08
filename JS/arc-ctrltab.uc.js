@@ -44,6 +44,8 @@
     panel.toggleAttribute('zac-no-showall', !pref('show-all-button', true));
     native.previewsPerRow = layout() === 'grid' ? pref('tiles-per-row', 5) : 1;
     panel.style.setProperty('--zac-scale', scale());
+    // Every preview box, loaded or not, gets the thumbnail shape, so tiles never change size.
+    panel.style.setProperty('--zac-ratio', 1 / tabPreviews.aspectRatio);
     const accent = String(pref('accent', '')).trim();
     if (accent) panel.style.setProperty('--ctrltab-accent', accent);
     else panel.style.removeProperty('--ctrltab-accent');
@@ -126,6 +128,15 @@
     e.preventDefault();
     move(...moves[e.key]);
   });
+
+  // A popup with focus (the translate offer, a permission prompt) takes Tab for itself and marks the event
+  // handled, so Firefox's own Ctrl+Tab listener skips it. Catch the shortcut first, on the way down.
+  window.addEventListener('keydown', (e) => {
+    if (!prefs.getBoolPref('browser.ctrlTab.sortByRecentlyUsed', false)) return;
+    const popup = e.target.closest?.('panel, menupopup, [popover]');
+    if (!popup || popup === panel) return;
+    if (ShortcutUtils.getSystemActionForEvent(e) === ShortcutUtils.CYCLE_TABS) native.onKeyDown(e);
+  }, true);
 
   // Sized per layout, then centred once the real size is known.
   native._openPanel = function () {

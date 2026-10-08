@@ -2,7 +2,7 @@
   "id": "zen-arc-ctrltab",
   "name": "Arc Ctrl+Tab",
   "description": "Arc-style Ctrl+Tab tab switcher in most-recently-used order. Turns on Zen's built-in switcher and restyles it with your theme's colors. Settings: hold-Ctrl or stay-open mode, thumbnail grid, plain list, or list with a large preview, unloaded tabs shown muted, sizes and highlight color. Turn off other Ctrl+Tab panel mods.",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "author": "dvgmdvgm",
   "homepage": "https://github.com/dvgmdvgm/zen-arc-ctrltab",
   "readme": "https://raw.githubusercontent.com/dvgmdvgm/zen-arc-ctrltab/main/README.md",

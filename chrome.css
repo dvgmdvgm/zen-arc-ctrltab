@@ -45,6 +45,8 @@
 
 #ctrlTab-panel .ctrlTab-canvas {
   grid-column: 1 / -1 !important;
+  position: relative !important;
+  aspect-ratio: var(--zac-ratio, 1.6) !important;
   margin: 0 !important;
   overflow: hidden !important;
   border-radius: calc(12px * var(--s)) !important;
@@ -54,14 +56,16 @@
   outline-offset: -1px !important;
 }
 
-/* The thumbnail is sized in px by the browser for its own layout; fit it to the tile instead. */
+/* The box has a fixed shape; the thumbnail (sized in px by the browser for its own layout) fills it. */
 #ctrlTab-panel .ctrlTab-canvas > img,
 #ctrlTab-panel .ctrlTab-canvas > canvas,
 #ctrlTab-panel .zac-shot > img,
 #ctrlTab-panel .zac-shot > canvas {
-  display: block !important;
+  position: absolute !important;
+  inset: 0 !important;
   width: 100% !important;
-  height: auto !important;
+  height: 100% !important;
+  object-fit: cover !important;
 }
 
 #ctrlTab-panel .ctrlTab-favicon-container {
@@ -184,12 +188,14 @@
 }
 
 #ctrlTab-panel .zac-shot {
+  position: relative !important;
+  aspect-ratio: var(--zac-ratio, 1.6) !important;
+  flex: none !important;
   overflow: hidden !important;
   border-radius: calc(12px * var(--s)) !important;
   background: color-mix(in srgb, currentColor 8%, transparent) !important;
   outline: 1px solid var(--border-color-deemphasized, transparent) !important;
   outline-offset: -1px !important;
-  min-height: calc(200px * var(--s)) !important;
 }
 
 #ctrlTab-panel .zac-meta {
