@@ -1,84 +1,204 @@
-/* Arc-style Ctrl+Tab panel. Restyles Firefox's #ctrlTab-panel (browser/skin/.../ctrlTab.css);
-   every color comes from the live theme, nothing is hard-coded. */
+/* Arc-style Ctrl+Tab panel. Restyles Firefox's #ctrlTab-panel; every color comes from the live theme.
+   Declarations are !important so they hold against the browser's own ctrlTab.css. */
 
 #ctrlTab-panel {
-  --panel-background-color: var(--arrowpanel-background, Menu);
-  --panel-text-color: var(--arrowpanel-color, MenuText);
-  --panel-border-color: var(--arrowpanel-border-color, transparent);
-  --panel-border-radius: 22px;
-  --panel-padding: 12px;
   --ctrltab-accent: var(--zen-primary-color, AccentColor);
-  font-weight: normal;
+  --panel-background-color: var(--arrowpanel-background, Menu) !important;
+  --panel-text-color: var(--arrowpanel-color, MenuText) !important;
+  --panel-border-color: var(--arrowpanel-border-color, transparent) !important;
+  --panel-border-radius: 24px !important;
+  --panel-padding: 14px !important;
+  font-size: 14px !important;
+  font-weight: normal !important;
+}
+
+#ctrlTab-panel #zac-body {
+  display: flex !important;
+  gap: 14px !important;
+}
+
+#ctrlTab-panel #zac-pane {
+  display: none !important;
 }
 
 #ctrlTab-panel #ctrlTab-previews {
-  column-gap: 8px;
-  row-gap: 8px;
+  flex: 1 !important;
+  min-width: 0 !important;
+  column-gap: 10px !important;
+  row-gap: 10px !important;
 }
 
 /* One tile: thumbnail on top, favicon + title underneath. */
 #ctrlTab-panel .ctrlTab-preview-inner {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: 8px;
-  margin: 0;
-  padding: 8px;
-  border: none;
-  border-radius: 16px;
-  text-shadow: none;
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 10px !important;
+  border: none !important;
+  border-radius: 18px !important;
+  text-shadow: none !important;
 }
 
 #ctrlTab-panel .ctrlTab-canvas {
-  grid-column: 1 / -1;
-  margin: 0;
-  overflow: hidden;
-  border-radius: 10px;
-  box-shadow: none;
-  outline: 1px solid var(--border-color-deemphasized, transparent);
-  outline-offset: -1px;
+  grid-column: 1 / -1 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  background-color: color-mix(in srgb, currentColor 8%, transparent) !important;
+  outline: 1px solid var(--border-color-deemphasized, transparent) !important;
+  outline-offset: -1px !important;
 }
 
 /* The thumbnail is sized in px by the browser for its own layout; fit it to the tile instead. */
 #ctrlTab-panel .ctrlTab-canvas > img,
-#ctrlTab-panel .ctrlTab-canvas > canvas {
+#ctrlTab-panel .ctrlTab-canvas > canvas,
+#ctrlTab-panel .zac-shot > img,
+#ctrlTab-panel .zac-shot > canvas {
+  display: block !important;
   width: 100% !important;
   height: auto !important;
 }
 
 #ctrlTab-panel .ctrlTab-favicon-container {
-  grid-column: 1;
-  grid-row: 2;
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+  position: static !important;
+  justify-content: center !important;
 }
 
+#ctrlTab-panel .ctrlTab-favicon-container image,
 #ctrlTab-panel .ctrlTab-favicon[src] {
-  width: 16px;
-  height: 16px;
-  margin: 0;
-  padding: 0;
-  background: none;
-  border: none;
-  border-radius: 4px;
+  position: static !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 5px !important;
 }
 
 #ctrlTab-panel .ctrlTab-label {
-  grid-column: 2;
-  grid-row: 2;
-  text-align: start;
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: start !important;
+  font-size: 14px !important;
 }
 
 /* The tile Ctrl+Tab is on. */
 #ctrlTab-panel .ctrlTab-preview:focus > .ctrlTab-preview-inner,
 #ctrlTab-panel #ctrlTab-showAll:focus {
-  background-color: color-mix(in srgb, var(--ctrltab-accent) 45%, transparent);
-  text-shadow: none;
-  border-color: transparent;
+  background: color-mix(in srgb, var(--ctrltab-accent) 55%, transparent) !important;
+  box-shadow: inset 0 0 0 2px var(--ctrltab-accent) !important;
+  border: none !important;
+  text-shadow: none !important;
+}
+
+#ctrlTab-panel #ctrlTab-showAll-container {
+  margin-top: 10px !important;
+}
+
+#ctrlTab-panel[zac-no-showall] #ctrlTab-showAll-container {
+  display: none !important;
 }
 
 #ctrlTab-panel #ctrlTab-showAll {
-  margin-top: 8px;
-  padding: 6px 14px;
-  border-radius: 10px;
-  text-shadow: none;
-  background-color: color-mix(in srgb, currentColor 10%, transparent);
+  margin: 0 !important;
+  padding: 8px 16px !important;
+  border-radius: 12px !important;
+  text-shadow: none !important;
+  background: color-mix(in srgb, currentColor 10%, transparent) !important;
+}
+
+/* Unloaded tabs: same tile, drained of color. */
+#ctrlTab-panel .ctrlTab-preview[zac-unloaded] .ctrlTab-canvas,
+#ctrlTab-panel .ctrlTab-preview[zac-unloaded] .ctrlTab-favicon-container,
+#ctrlTab-panel #zac-pane[zac-unloaded] .zac-shot,
+#ctrlTab-panel #zac-pane[zac-unloaded] .zac-icon {
+  filter: grayscale(1) !important;
+  opacity: 0.55 !important;
+}
+
+#ctrlTab-panel .ctrlTab-preview[zac-unloaded] .ctrlTab-label,
+#ctrlTab-panel #zac-pane[zac-unloaded] .zac-title {
+  opacity: 0.65 !important;
+}
+
+/* List layouts: one row per tab, no thumbnails. */
+#ctrlTab-panel:is([zac-layout="list"], [zac-layout="split"]) #ctrlTab-previews {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  max-height: var(--zac-max-h, 80vh) !important;
+  overflow-y: auto !important;
+}
+
+#ctrlTab-panel:is([zac-layout="list"], [zac-layout="split"]) .ctrlTab-canvas {
+  display: none !important;
+}
+
+#ctrlTab-panel:is([zac-layout="list"], [zac-layout="split"]) .ctrlTab-preview-inner {
+  padding: 10px 14px !important;
+  border-radius: 12px !important;
+}
+
+#ctrlTab-panel:is([zac-layout="list"], [zac-layout="split"]) :is(.ctrlTab-favicon-container, .ctrlTab-label) {
+  grid-row: 1 !important;
+}
+
+/* List + preview: list on the left, one large preview on the right. */
+#ctrlTab-panel[zac-layout="split"] #ctrlTab-previews {
+  flex: 0 0 340px !important;
+}
+
+#ctrlTab-panel[zac-layout="split"] #zac-pane {
+  display: flex !important;
+  flex: 1 !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  min-width: 0 !important;
+  min-height: 320px !important;
+  padding: 14px !important;
+  border-radius: 18px !important;
+  background: color-mix(in srgb, currentColor 6%, transparent) !important;
+}
+
+#ctrlTab-panel .zac-shot {
+  overflow: hidden !important;
+  border-radius: 12px !important;
+  background: color-mix(in srgb, currentColor 8%, transparent) !important;
+  outline: 1px solid var(--border-color-deemphasized, transparent) !important;
+  outline-offset: -1px !important;
+  min-height: 200px !important;
+}
+
+#ctrlTab-panel .zac-meta {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+#ctrlTab-panel .zac-icon {
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 6px !important;
+}
+
+#ctrlTab-panel .zac-title {
+  font-size: 15px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+#ctrlTab-panel .zac-host {
+  font-size: 12px !important;
+  opacity: 0.65 !important;
 }

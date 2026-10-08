@@ -4,5 +4,92 @@
     "property": "zen-arc-ctrltab.enabled",
     "label": "Ctrl+Tab shows a visual tab switcher (most recently used first)",
     "defaultValue": true
+  },
+  {
+    "type": "separator",
+    "label": "Behaviour",
+    "margin": "15px 0 15px 0"
+  },
+  {
+    "type": "dropdown",
+    "property": "zen-arc-ctrltab.open-mode",
+    "value": "number",
+    "label": "How the panel works",
+    "defaultValue": 0,
+    "options": [
+      { "label": "Hold Ctrl, press Tab to move, release Ctrl to switch", "value": 0 },
+      { "label": "Press Ctrl+Tab once: the panel stays open (Enter or click to switch, Esc to cancel)", "value": 1 }
+    ]
+  },
+  {
+    "type": "checkbox",
+    "property": "zen-arc-ctrltab.show-unloaded",
+    "label": "Include unloaded tabs (shown muted)",
+    "defaultValue": true
+  },
+  {
+    "type": "dropdown",
+    "property": "zen-arc-ctrltab.max-tabs",
+    "value": "number",
+    "label": "Most tabs shown in the panel",
+    "defaultValue": 10,
+    "options": [
+      { "label": "6", "value": 6 },
+      { "label": "8", "value": 8 },
+      { "label": "10", "value": 10 },
+      { "label": "12", "value": 12 },
+      { "label": "16", "value": 16 },
+      { "label": "24", "value": 24 },
+      { "label": "36", "value": 36 }
+    ]
+  },
+  {
+    "type": "separator",
+    "label": "Layout",
+    "margin": "15px 0 15px 0"
+  },
+  {
+    "type": "dropdown",
+    "property": "zen-arc-ctrltab.layout",
+    "value": "number",
+    "label": "Panel layout",
+    "defaultValue": 0,
+    "options": [
+      { "label": "Previews: a grid of thumbnails", "value": 0 },
+      { "label": "List: tabs top to bottom, no previews", "value": 1 },
+      { "label": "List and preview: tab list on the left, large preview on the right", "value": 2 }
+    ]
+  },
+  {
+    "type": "dropdown",
+    "property": "zen-arc-ctrltab.tiles-per-row",
+    "value": "number",
+    "label": "Previews per row (grid layout; fewer means bigger)",
+    "defaultValue": 5,
+    "options": [
+      { "label": "3", "value": 3 },
+      { "label": "4", "value": 4 },
+      { "label": "5", "value": 5 },
+      { "label": "6", "value": 6 },
+      { "label": "7", "value": 7 }
+    ]
+  },
+  {
+    "type": "checkbox",
+    "property": "zen-arc-ctrltab.show-all-button",
+    "label": "Show the \"List all tabs\" button under the panel",
+    "defaultValue": true
+  },
+  {
+    "type": "separator",
+    "label": "Colors",
+    "margin": "15px 0 15px 0"
+  },
+  {
+    "type": "string",
+    "property": "zen-arc-ctrltab.accent",
+    "label": "Highlight color (any CSS color; empty uses your theme's accent)",
+    "placeholder": "#5b6cf0",
+    "defaultValue": ""
   }
 ]
