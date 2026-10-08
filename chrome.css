@@ -5,13 +5,39 @@
 #ctrlTab-panel {
   --s: var(--zac-scale, 1);
   --ctrltab-accent: var(--zen-primary-color, AccentColor);
-  --panel-background-color: var(--arrowpanel-background, Menu) !important;
+  /* The popup window is invisible and covers the browser window; #zac-card is the visible panel. */
+  --panel-background-color: transparent !important;
   --panel-text-color: var(--arrowpanel-color, MenuText) !important;
-  --panel-border-color: var(--arrowpanel-border-color, transparent) !important;
-  --panel-border-radius: calc(24px * var(--s)) !important;
-  --panel-padding: calc(14px * var(--s)) !important;
+  --panel-border-color: transparent !important;
+  --panel-border-radius: 0 !important;
+  --panel-padding: 0 !important;
+  --panel-box-shadow: none !important;
+  --panel-box-shadow-margin: 0px !important;
   font-size: calc(14px * var(--s)) !important;
   font-weight: normal !important;
+}
+
+#ctrlTab-panel #zac-stage {
+  display: flex !important;
+  flex: 1 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+
+#ctrlTab-panel #zac-card {
+  display: flex !important;
+  flex-direction: column !important;
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  padding: calc(14px * var(--s)) !important;
+  border: 1px solid var(--arrowpanel-border-color, transparent) !important;
+  border-radius: calc(24px * var(--s)) !important;
+  background: var(--arrowpanel-background, Menu) !important;
+  color: var(--arrowpanel-color, MenuText) !important;
+  box-shadow: 0 12px 48px rgb(0 0 0 / 0.35) !important;
 }
 
 #ctrlTab-panel #zac-body {

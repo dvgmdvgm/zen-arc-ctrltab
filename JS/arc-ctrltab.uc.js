@@ -51,13 +51,24 @@
     else panel.style.removeProperty('--ctrltab-accent');
   };
 
-  // The split layout's big preview sits beside the list inside one wrapper.
+  // The popup is a transparent window as big as the browser window ("stage"); the visible panel ("card") is
+  // an ordinary element centred inside it. Centring and click-outside then follow what is drawn, not OS
+  // window geometry. The split layout's big preview sits beside the list inside one body.
+  const stage = el('div');
+  stage.id = 'zac-stage';
+  const card = el('div');
+  card.id = 'zac-card';
   const body = el('div');
   body.id = 'zac-body';
   const pane = el('div');
   pane.id = 'zac-pane';
-  panel.insertBefore(body, list);
   body.append(list, pane);
+  card.append(body, document.getElementById('ctrlTab-showAll-container'));
+  stage.append(card);
+  panel.append(stage);
+  stage.addEventListener('mousedown', (e) => {
+    if (e.target === stage) panel.hidePopup();
+  });
 
   // Only the grid layout wants thumbnails in its tiles; the split pane asks for its own.
   const getThumb = tabPreviews.get.bind(tabPreviews);
@@ -150,28 +161,22 @@
     if (popup && popup !== panel) native.onKeyDown(e);
   }, true);
 
-  // Sized per layout, then centred once the real size is known.
+  // The card is sized per layout; the popup itself just covers the window.
   native._openPanel = function () {
     tabPreviewPanelHelper.opening(this);
-    const w = screen.availWidth;
-    const h = screen.availHeight;
-    const rows = Math.ceil(this.tabPreviewCount / this.previewColumnCount);
+    const w = window.innerWidth;
+    const h = window.innerHeight;
     const s = scale();
-    const width = {
+    card.style.width = {
       grid: Math.min(w * 0.96, this.canvasWidth * 1.25 * this.previewColumnCount * s),
       list: Math.min(w * 0.96, 640 * s),
       split: Math.min(w * 0.96, 1180 * s),
-    }[layout()];
-    const guess = layout() === 'grid' ? this.canvasHeight * 1.3 * rows * s + 90 : h * 0.6;
-    panel.style.width = width + 'px';
-    panel.style.setProperty('--zac-max-h', Math.floor(h * 0.78) + 'px');
-    panel.openPopupAtScreen(screen.availLeft + (w - width) / 2, screen.availTop + (h - guess) / 2, false);
+    }[layout()] + 'px';
+    panel.style.width = w + 'px';
+    panel.style.height = h + 'px';
+    panel.style.setProperty('--zac-max-h', Math.floor(h * 0.7) + 'px');
+    panel.openPopup(document.documentElement, 'overlap', 0, 0);
   };
-  panel.addEventListener('popupshown', (e) => {
-    if (e.target !== panel) return;
-    const r = panel.getBoundingClientRect();
-    panel.moveTo(screen.availLeft + (screen.availWidth - r.width) / 2, screen.availTop + (screen.availHeight - r.height) / 2);
-  });
 
   const observer = { observe: apply };
   apply();

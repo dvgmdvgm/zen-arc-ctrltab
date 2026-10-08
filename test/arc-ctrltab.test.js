@@ -16,6 +16,7 @@ class El {
   append(...n) { this.children.push(...n); }
   replaceChildren(...n) { this.children = n; }
   addEventListener(t, f) { (this.listeners[t] ||= []).push(f); }
+  hidePopup() { this.hidden = true; }
   focus() { env.document.activeElement = this; }
   getBoundingClientRect() { return { width: 100, height: 100 }; }
 }
@@ -31,10 +32,10 @@ function load(prefValues = {}) {
     setBoolPref: (k, v) => { store[k] = v; }, setIntPref: (k, v) => { store[k] = v; },
     addObserver() {}, removeObserver() {},
   } };
-  const panel = new El(), list = new El();
+  const panel = new El(), list = new El(), made = [];
   const doc = { activeElement: null, listeners: [], removed: [],
     getElementById: (id) => ({ 'ctrlTab-panel': panel, 'ctrlTab-previews': list })[id],
-    createElementNS: () => new El(),
+    createElementNS: () => { const e = new El(); made.push(e); return e; },
     removeEventListener(t) { this.removed.push(t); },
   };
   const calls = [];
@@ -47,7 +48,7 @@ function load(prefValues = {}) {
   const ShortcutUtils = { CYCLE_TABS: 'cycle', getSystemActionForEvent: (e) => e.action };
   env = { document: doc };
   new Function('window', 'document', 'Services', 'ctrlTab', 'screen', 'gBrowser', 'ShortcutUtils', code)(win, doc, Services, native, {}, { warmupTab() {} }, ShortcutUtils);
-  return { store, panel, list, native, win, calls };
+  return { store, panel, list, native, win, calls, made };
 }
 
 const ctrlUp = { type: 'keyup', keyCode: 17, DOM_VK_CONTROL: 17, preventDefault() {}, stopPropagation() {} };
@@ -142,4 +143,14 @@ test('Ctrl+Tab typed inside another popup still reaches the switcher', () => {
   store['browser.ctrlTab.sortByRecentlyUsed'] = false;
   keydown(inPopup({}));
   assert.deepStrictEqual(calls, ['onKeyDown']);
+});
+
+test('a click on the empty stage around the card closes the panel, a click on the card does not', () => {
+  const { made, panel } = load();
+  const stage = made.find((e) => e.id === 'zac-stage');
+  const card = made.find((e) => e.id === 'zac-card');
+  stage.listeners.mousedown[0]({ target: card });
+  assert.ok(!panel.hidden);
+  stage.listeners.mousedown[0]({ target: stage });
+  assert.ok(panel.hidden);
 });
