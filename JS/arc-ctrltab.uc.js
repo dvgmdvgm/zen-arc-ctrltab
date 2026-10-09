@@ -81,6 +81,29 @@
     preview.toggleAttribute('zac-unloaded', !!tab?.hasAttribute('pending'));
   };
 
+  // Optionally leave out pinned tabs that are not loaded, so pinned ones only appear while in use.
+  const tabList = Object.getOwnPropertyDescriptor(native, 'tabList').get;
+  Object.defineProperty(native, 'tabList', {
+    configurable: true,
+    get() {
+      const tabs = tabList.call(this);
+      return pref('hide-unloaded-pinned', false) ? tabs.filter((t) => !(t.pinned && t.hasAttribute('pending'))) : tabs;
+    },
+  });
+
+  // Firefox waits 200 ms before showing the panel, so a quick Ctrl+Tab just flips back; make that wait adjustable.
+  const open = native.open;
+  native.open = function () {
+    const before = this._timer;
+    open.call(this);
+    const delay = pref('open-delay', 200);
+    if (!this._timer || this._timer === before || delay === 200) return;
+    clearTimeout(this._timer);
+    this._timer = null;
+    if (delay === 0) this._openPanel();
+    else this._timer = setTimeout(() => { this._timer = null; this._openPanel(); }, delay);
+  };
+
   let shown = 0;
   const showInPane = async (tab) => {
     const mine = ++shown;
@@ -161,22 +184,32 @@
     if (popup && popup !== panel) native.onKeyDown(e);
   }, true);
 
-  // The card is sized per layout; the popup itself just covers the window.
+  // The card is sized per layout. By default the popup covers the window; compact makes it only as big as the card.
+  const root = document.documentElement;
   native._openPanel = function () {
     tabPreviewPanelHelper.opening(this);
     const w = window.innerWidth;
     const h = window.innerHeight;
     const s = scale();
-    card.style.width = {
+    const compact = pref('compact', false);
+    const width = {
       grid: Math.min(w * 0.96, this.canvasWidth * 1.25 * this.previewColumnCount * s),
       list: Math.min(w * 0.96, 640 * s),
       split: Math.min(w * 0.96, 1180 * s),
-    }[layout()] + 'px';
-    panel.style.width = w + 'px';
-    panel.style.height = h + 'px';
+    }[layout()];
+    card.style.width = width + 'px';
+    panel.toggleAttribute('zac-compact', compact);
+    panel.style.width = (compact ? width : w) + 'px';
+    panel.style.height = compact ? '' : h + 'px';
     panel.style.setProperty('--zac-max-h', Math.floor(h * 0.7) + 'px');
-    panel.openPopup(document.documentElement, 'overlap', 0, 0);
+    // Compact: placed by a guess first, then re-centred with the real height once shown.
+    panel.openPopup(root, 'overlap', compact ? (w - width) / 2 : 0, compact ? h * 0.2 : 0);
   };
+  panel.addEventListener('popupshown', (e) => {
+    if (e.target !== panel || !panel.hasAttribute('zac-compact')) return;
+    const r = panel.getBoundingClientRect();
+    panel.moveToAnchor(root, 'overlap', (window.innerWidth - r.width) / 2, (window.innerHeight - r.height) / 2);
+  });
 
   const observer = { observe: apply };
   apply();

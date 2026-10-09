@@ -16,6 +16,9 @@ All of them live in the mod's settings (Zen settings → Sine Mods → Arc Ctrl+
 | Panel size | 70% to 250%. Scales the panel, previews, icons and text together. (Sine has no slider control, so it is a list of steps.) |
 | Previews per row | 3–7 for the grid layout. Fewer means bigger previews. |
 | Most tabs shown | 6 to 36. |
+| Wait before the panel appears | None, 100, 200 (Firefox's own), 300 or 500 ms. A quick Ctrl+Tab tap flips to the previous tab without showing the panel; with "None" the panel appears at once. Zen's panel has no open/close animation of its own, this delay is the only wait. |
+| Compact | Off by default: the panel's popup window covers the whole browser window and a click outside the panel closes it. On: the window is only as big as the panel and sits in the middle of the browser window, so the rest of the window is untouched. |
+| Leave out unloaded pinned tabs | Pinned tabs then show up only while they are loaded. |
 | Include unloaded tabs | Unloaded tabs are listed too, with their icon and preview (when Zen kept one) drained of color. |
 | "List all tabs" button | Show or hide the button under the panel. |
 | Highlight color | Any CSS color. Empty uses your theme's accent. |

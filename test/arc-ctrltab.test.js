@@ -17,6 +17,8 @@ class El {
   replaceChildren(...n) { this.children = n; }
   addEventListener(t, f) { (this.listeners[t] ||= []).push(f); }
   hidePopup() { this.hidden = true; }
+  openPopup() { this.opened = true; }
+  moveToAnchor() {}
   focus() { env.document.activeElement = this; }
   getBoundingClientRect() { return { width: 100, height: 100 }; }
 }
@@ -35,16 +37,19 @@ function load(prefValues = {}) {
   const panel = new El(), list = new El(), made = [];
   const doc = { activeElement: null, listeners: [], removed: [],
     getElementById: (id) => ({ 'ctrlTab-panel': panel, 'ctrlTab-previews': list })[id],
+    documentElement: {},
     createElementNS: () => { const e = new El(); made.push(e); return e; },
     removeEventListener(t) { this.removed.push(t); },
   };
   const calls = [];
   const native = {
     previewsPerRow: 7, onKeyDown(e) { calls.push('onKeyDown'); }, isOpen: true, previewColumnCount: 2,
-    previews: [], updatePreview() {},
+    previews: [], updatePreview() {}, open() { this._timer = 7; },
+    tabs: [],
+    get tabList() { return this.tabs; },
     handleEvent(e) { calls.push(e.type); },
   };
-  const win = { tabPreviews: { aspectRatio: 0.625, get: () => Promise.resolve('thumb') }, tabPreviewPanelHelper: {}, listeners: {}, addEventListener(t, f) { (this.listeners[t] ||= []).push(f); } };
+  const win = { tabPreviews: { aspectRatio: 0.625, get: () => Promise.resolve('thumb') }, tabPreviewPanelHelper: { opening() { calls.push('opening'); } }, innerWidth: 1000, innerHeight: 800, listeners: {}, addEventListener(t, f) { (this.listeners[t] ||= []).push(f); } };
   const ShortcutUtils = { CYCLE_TABS: 'cycle', getSystemActionForEvent: (e) => e.action };
   env = { document: doc };
   new Function('window', 'document', 'Services', 'ctrlTab', 'screen', 'gBrowser', 'ShortcutUtils', code)(win, doc, Services, native, {}, { warmupTab() {} }, ShortcutUtils);
@@ -153,4 +158,38 @@ test('a click on the empty stage around the card closes the panel, a click on th
   assert.ok(!panel.hidden);
   stage.listeners.mousedown[0]({ target: stage });
   assert.ok(panel.hidden);
+});
+
+test('unloaded pinned tabs can be left out; loaded pinned and unloaded unpinned stay', () => {
+  const tab = (pinned, pending) => ({ pinned, hasAttribute: (a) => a === 'pending' && pending });
+  const tabs = [tab(true, false), tab(true, true), tab(false, true), tab(false, false)];
+  const off = load();
+  off.native.tabs = tabs;
+  assert.strictEqual(off.native.tabList.length, 4);
+  const on = load({ 'zen-arc-ctrltab.hide-unloaded-pinned': true });
+  on.native.tabs = tabs;
+  assert.deepStrictEqual(on.native.tabList, [tabs[0], tabs[2], tabs[3]]);
+});
+
+test('open delay: instant opens the panel at once, 200 keeps Firefox timer', () => {
+  const instant = load({ 'zen-arc-ctrltab.open-delay': 0 });
+  instant.native.open();
+  assert.deepStrictEqual(instant.calls, ['opening']);
+  const normal = load();
+  normal.native.open();
+  assert.deepStrictEqual(normal.calls, []);
+  assert.strictEqual(normal.native._timer, 7);
+});
+
+test('compact opens a card-sized popup; the default covers the whole window', () => {
+  const full = load();
+  full.native.canvasWidth = 200;
+  full.native._openPanel();
+  assert.deepStrictEqual([full.panel.style.width, full.panel.style.height], ['1000px', '800px']);
+  assert.ok(!full.panel.hasAttribute('zac-compact'));
+  const compact = load({ 'zen-arc-ctrltab.compact': true });
+  compact.native.canvasWidth = 200;
+  compact.native._openPanel();
+  assert.deepStrictEqual([compact.panel.style.width, compact.panel.style.height], ['500px', '']);
+  assert.ok(compact.panel.hasAttribute('zac-compact') && compact.panel.opened);
 });

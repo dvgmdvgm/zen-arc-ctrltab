@@ -36,10 +36,30 @@
     ]
   },
   {
+    "type": "dropdown",
+    "property": "zen-arc-ctrltab.open-delay",
+    "value": "number",
+    "label": "Wait before the panel appears (a quick Ctrl+Tab tap flips to the previous tab without showing it)",
+    "defaultValue": 200,
+    "options": [
+      { "label": "None: appears at once", "value": 0 },
+      { "label": "100 ms", "value": 100 },
+      { "label": "200 ms (Firefox default)", "value": 200 },
+      { "label": "300 ms", "value": 300 },
+      { "label": "500 ms", "value": 500 }
+    ]
+  },
+  {
     "type": "checkbox",
     "property": "zen-arc-ctrltab.show-unloaded",
     "label": "Include unloaded tabs (shown muted)",
     "defaultValue": true
+  },
+  {
+    "type": "checkbox",
+    "property": "zen-arc-ctrltab.hide-unloaded-pinned",
+    "label": "Leave out unloaded pinned tabs (pinned tabs show up only while loaded)",
+    "defaultValue": false
   },
   {
     "type": "dropdown",
@@ -73,6 +93,12 @@
       { "label": "List: tabs top to bottom, no previews", "value": 1 },
       { "label": "List and preview: tab list on the left, large preview on the right", "value": 2 }
     ]
+  },
+  {
+    "type": "checkbox",
+    "property": "zen-arc-ctrltab.compact",
+    "label": "Compact: the panel window is only as big as the panel, centred in the browser window (otherwise it covers the whole window)",
+    "defaultValue": false
   },
   {
     "type": "dropdown",

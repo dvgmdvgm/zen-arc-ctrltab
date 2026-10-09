@@ -63,6 +63,11 @@
   min-width: 0 !important;
 }
 
+/* Compact: the popup window is only as big as the card, so a shadow would be cut off. */
+#ctrlTab-panel[zac-compact] #zac-card {
+  box-shadow: none !important;
+}
+
 /* One tile: thumbnail on top, favicon + title underneath. */
 #ctrlTab-panel .ctrlTab-preview-inner {
   display: grid !important;
